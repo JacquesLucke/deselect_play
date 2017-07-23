@@ -27,12 +27,20 @@ class DeselectAndPlay(bpy.types.Operator):
     bl_description = "Deselect/select objects and play/pause."
     bl_options = {"REGISTER"}
     object_names = []
+    last_mode = "OBJECT"
+    last_active_object_name = None
 
     def execute(self, context):
         if is_animation_playing(context):
             if is_no_object_selected(context):
                 select_objects(self.object_names, context)
+                if try_make_object_active(context, self.last_active_object_name):
+                    bpy.ops.object.mode_set(mode = self.last_mode)
         else:
+            type(self).last_mode = context.object.mode if context.object else "OBJECT"
+            type(self).last_active_object_name = getattr(context.object, "name", None)
+            bpy.ops.object.mode_set(mode = "OBJECT")
+
             self.object_names[:] = get_selected_object_names(context)
             bpy.ops.object.select_all(action = "DESELECT")
 
@@ -54,6 +62,14 @@ def select_objects(names, context):
 def is_no_object_selected(context):
     objects = context.scene.objects
     return not any(object.select for object in objects)
+
+def try_make_object_active(context, name):
+    objects = context.scene.objects
+    try:
+        objects.active = objects[name]
+        return True
+    except:
+        return False
 
 def register():
     bpy.utils.register_module(__name__)

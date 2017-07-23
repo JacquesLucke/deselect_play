@@ -4,7 +4,7 @@ bl_info = {
     "name": "Deselect - Play",
     "description": "Deselect all objects and play animation.",
     "author": "Jacques Lucke",
-    "version": (0, 0, 1),
+    "version": (0, 0, 2),
     "blender": (2, 78, 5),
     "location": "Timeline",
     "warning": "",

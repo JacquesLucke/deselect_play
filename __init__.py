@@ -43,6 +43,7 @@ class DeselectAndPlay(bpy.types.Operator):
 
             type(self).object_names = get_selected_object_names(context)
             bpy.ops.object.select_all(action = "DESELECT")
+            context.scene.objects.active = None
 
         bpy.ops.screen.animation_play()
         return {"FINISHED"}

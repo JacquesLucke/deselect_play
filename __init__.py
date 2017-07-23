@@ -6,7 +6,7 @@ bl_info = {
     "author": "Jacques Lucke",
     "version": (0, 0, 1),
     "blender": (2, 78, 5),
-    "location": "View3D",
+    "location": "Timeline",
     "warning": "",
     "wiki_url": "",
     "category": "Animation" }
@@ -16,12 +16,12 @@ object_names = []
 class DeselectPlayButtonInHeader(bpy.types.Header):
     bl_idname = "deselect_play_header"
     bl_space_type = "TIMELINE"
-    
+
     def draw(self, context):
         layout = self.layout
         icon = "PAUSE" if is_animation_playing(context) else "PLAY"
         layout.operator("dp.deselect_and_play", "", icon = icon)
-        
+
 class DeselectAndPlay(bpy.types.Operator):
     bl_idname = "dp.deselect_and_play"
     bl_label = "Deselect and Play"
@@ -36,12 +36,12 @@ class DeselectAndPlay(bpy.types.Operator):
         else:
             object_names = get_selected_object_names(context)
             bpy.ops.object.select_all(action = "DESELECT")
-            
+
         bpy.ops.screen.animation_play()
         return {"FINISHED"}
-                
+
 def is_animation_playing(context):
-    return context.screen.is_animation_playing 
+    return context.screen.is_animation_playing
 
 def get_selected_object_names(context):
     objects = context.scene.objects

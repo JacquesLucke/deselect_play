@@ -11,7 +11,6 @@ bl_info = {
     "wiki_url": "",
     "category": "Animation" }
 
-object_names = []
 
 class DeselectPlayButtonInHeader(bpy.types.Header):
     bl_idname = "deselect_play_header"
@@ -27,14 +26,14 @@ class DeselectAndPlay(bpy.types.Operator):
     bl_label = "Deselect and Play"
     bl_description = "Deselect/select objects and play/pause."
     bl_options = {"REGISTER"}
+    object_names = []
 
     def execute(self, context):
-        global object_names
         if is_animation_playing(context):
             if is_no_object_selected(context):
-                select_objects(object_names, context)
+                select_objects(self.object_names, context)
         else:
-            object_names = get_selected_object_names(context)
+            self.object_names[:] = get_selected_object_names(context)
             bpy.ops.object.select_all(action = "DESELECT")
 
         bpy.ops.screen.animation_play()

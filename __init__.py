@@ -41,7 +41,7 @@ class DeselectAndPlay(bpy.types.Operator):
             type(self).last_active_object_name = getattr(context.object, "name", None)
             bpy.ops.object.mode_set(mode = "OBJECT")
 
-            self.object_names[:] = get_selected_object_names(context)
+            type(self).object_names = get_selected_object_names(context)
             bpy.ops.object.select_all(action = "DESELECT")
 
         bpy.ops.screen.animation_play()

@@ -4,7 +4,7 @@ bl_info = {
     "name": "Deselect - Play",
     "description": "Deselect all objects and play animation.",
     "author": "Jacques Lucke",
-    "version": (0, 0, 2),
+    "version": (0, 0, 3),
     "blender": (2, 78, 5),
     "location": "Timeline",
     "warning": "",
@@ -19,10 +19,10 @@ class DeselectPlayButtonInHeader(bpy.types.Header):
     def draw(self, context):
         layout = self.layout
         icon = "PAUSE" if is_animation_playing(context) else "PLAY"
-        layout.operator("dp.deselect_and_play", "", icon = icon)
+        layout.operator("screen.deselect_and_play", "", icon = icon)
 
 class DeselectAndPlay(bpy.types.Operator):
-    bl_idname = "dp.deselect_and_play"
+    bl_idname = "screen.deselect_and_play"
     bl_label = "Deselect and Play"
     bl_description = "Deselect/select objects and play/pause."
     bl_options = {"REGISTER"}

@@ -31,19 +31,20 @@ class DeselectAndPlay(bpy.types.Operator):
     last_active_object_name = None
 
     def execute(self, context):
+        objects = context.scene.objects
         if is_animation_playing(context):
-            if is_no_object_selected(context):
+            if is_no_object_selected(objects):
                 select_objects(self.object_names, context)
-                if try_make_object_active(context, self.last_active_object_name):
+                if try_make_object_active(objects, self.last_active_object_name):
                     bpy.ops.object.mode_set(mode = self.last_mode)
         else:
             type(self).last_mode = context.object.mode if context.object else "OBJECT"
             type(self).last_active_object_name = getattr(context.object, "name", None)
-            bpy.ops.object.mode_set(mode = "OBJECT")
+            if objects.active is not None: bpy.ops.object.mode_set(mode = "OBJECT")
 
-            type(self).object_names = get_selected_object_names(context)
+            type(self).object_names = get_selected_object_names(objects)
             bpy.ops.object.select_all(action = "DESELECT")
-            context.scene.objects.active = None
+            objects.active = None
 
         bpy.ops.screen.animation_play()
         return {"FINISHED"}
@@ -51,8 +52,7 @@ class DeselectAndPlay(bpy.types.Operator):
 def is_animation_playing(context):
     return context.screen.is_animation_playing
 
-def get_selected_object_names(context):
-    objects = context.scene.objects
+def get_selected_object_names(objects):
     return [object.name for object in objects if object.select]
 
 def select_objects(names, context):
@@ -60,12 +60,10 @@ def select_objects(names, context):
         if name in context.scene.objects:
             context.scene.objects[name].select = True
 
-def is_no_object_selected(context):
-    objects = context.scene.objects
+def is_no_object_selected(objects):
     return not any(object.select for object in objects)
 
-def try_make_object_active(context, name):
-    objects = context.scene.objects
+def try_make_object_active(objects, name):
     try:
         objects.active = objects[name]
         return True
